@@ -30,7 +30,8 @@ public class ClaseFrame extends JFrame implements ActionListener
 		private Container contenedor;
 		JLabel labelTitulo;/*declaramos el objeto Label*/
 		JTextArea areaDeTexto;
-		JButton botonAbrir;/*declaramos el objeto Boton*/
+		JButton botonAbrir,btnNewButton,btnNewButton_1,btnNewButton_2,btnNewButton_3
+		,btnNewButton_4,btnCargar;/*declaramos el objeto Boton*/
 		JScrollPane scrollPaneArea;
 		JFileChooser fileChooser; /*Declaramos el objeto fileChooser*/
 		String texto="";
@@ -39,6 +40,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 		public ArrayList<String[]> array4 = new ArrayList<String[]>();
 		public String query="";
 		private JTextField txtNoHayArchivo;
+		private Procesos p = new Procesos();
 		public ClaseFrame()//constructor
 		{
 			contenedor=getContentPane();
@@ -75,31 +77,36 @@ public class ClaseFrame extends JFrame implements ActionListener
 			contenedor.add(scrollPaneArea);
 			contenedor.add(botonAbrir);
 			
-			JButton btnNewButton = new JButton("Boton 2");
+			btnNewButton = new JButton("Boton 2");
 			btnNewButton.setBounds(131, 331, 89, 23);
 			getContentPane().add(btnNewButton);
+			btnNewButton.addActionListener(this);
 			
-			JButton btnNewButton_1 = new JButton("Boton 3");
+			btnNewButton_1 = new JButton("Boton 3");
 			btnNewButton_1.setBounds(230, 331, 94, 23);
 			getContentPane().add(btnNewButton_1);
+			btnNewButton_1.addActionListener(this);
 			
-			JButton btnNewButton_2 = new JButton("Boton 4");
+			btnNewButton_2 = new JButton("Boton 4");
 			btnNewButton_2.setBounds(32, 378, 89, 23);
 			getContentPane().add(btnNewButton_2);
+			btnNewButton_2.addActionListener(this);
 			
-			JButton btnNewButton_3 = new JButton("Boton 5");
+			btnNewButton_3 = new JButton("Boton 5");
 			btnNewButton_3.setBounds(131, 378, 89, 23);
 			getContentPane().add(btnNewButton_3);
+			btnNewButton_3.addActionListener(this);
 			
-			JButton btnNewButton_4 = new JButton("Boton 6");
+			btnNewButton_4 = new JButton("Boton 6");
 			btnNewButton_4.setBounds(230, 378, 94, 23);
 			getContentPane().add(btnNewButton_4);
+			btnNewButton_4.addActionListener(this);
 			
 			JTextPane txtpnInstruccionesnBoton = new JTextPane();
 			txtpnInstruccionesnBoton.setEditable(false);
 			txtpnInstruccionesnBoton.setFont(new Font("Dialog", Font.PLAIN, 14));
 			txtpnInstruccionesnBoton.setBackground(SystemColor.control);
-			txtpnInstruccionesnBoton.setText("Instrucciones: \r\nBoton 1: Cargar datos.csv.\r\nBoton 2: Visualizar grafo.\r\nBoton 3: Visualizar relaciones que tienen mas de 6 correos.\r\nBoton 4: Simplificar grafo.\r\nBoton 5: Page-Rank.\r\nBoton 6: Mostrar personas mas y menos comunicadas.\r\nBoton 7:  Mostrar la cantidad m\u00EDnima de correos que ha enviado una persona directa e indirectamente a otra persona o a todas las otras personas.");
+			txtpnInstruccionesnBoton.setText("Instrucciones: \r\nCargar: Cargar datos.csv.\r\nBoton 1: Visualizar grafo.\r\nBoton 2: Visualizar relaciones que tienen mas de 6 correos.\r\nBoton 3: Simplificar grafo.\r\nBoton 4: Page-Rank.\r\nBoton 5: Mostrar personas mas y menos comunicadas.\r\nBoton 6:  Mostrar la cantidad m\u00EDnima de correos que ha enviado una persona directa e indirectamente a otra persona o a todas las otras personas.");
 			txtpnInstruccionesnBoton.setBounds(440, 50, 269, 304);
 			getContentPane().add(txtpnInstruccionesnBoton);
 			
@@ -109,9 +116,14 @@ public class ClaseFrame extends JFrame implements ActionListener
 			txtNoHayArchivo.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 14));
 			txtNoHayArchivo.setText("No hay archivo cargado.");
 			txtNoHayArchivo.setBackground(Color.DARK_GRAY);
-			txtNoHayArchivo.setBounds(440, 365, 204, 34);
+			txtNoHayArchivo.setBounds(505, 365, 204, 34);
 			getContentPane().add(txtNoHayArchivo);
 			txtNoHayArchivo.setColumns(10);
+			
+			btnCargar = new JButton("Cargar");
+			btnCargar.setBounds(406, 372, 89, 23);
+			getContentPane().add(btnCargar);
+			btnCargar.addActionListener(this);
        		//Asigna un titulo a la barra de titulo
 			setTitle("Proyecto");
 			//tamaño de la ventana
@@ -124,10 +136,12 @@ public class ClaseFrame extends JFrame implements ActionListener
 
 		@Override
 		public void actionPerformed(ActionEvent evento) {
+			if (evento.getSource()==btnCargar)
+			{
+				ArrayList<String[]>  array2=abrirArchivo();
+			}
 			if (evento.getSource()==botonAbrir)
 			{
-				ArrayList<String[]>  archivo=abrirArchivo();
-				//areaDeTexto.setText(archivo);
 				int conta=0;
 				for (String [] i: array2){
 					conta++;
@@ -142,13 +156,75 @@ public class ClaseFrame extends JFrame implements ActionListener
 					}
 					texto+="\n";
 				}
-				areaDeTexto.setText(texto);
-				Procesos p = new Procesos();
+				p.crearUsuariosGrafo();
+				p.relacionar(array3,false);
+				
+			}
+			if (evento.getSource()==btnNewButton)
+			{
+				int conta=0;
+				for (String [] i: array2){
+					conta++;
+					if (conta>1){
+						array3.add(i);
+					}
+				}
+				conta=0;
+				for(String[] n: array3){
+					for (String i: n){
+						texto+=i+" ";
+					}
+					texto+="\n";
+				}
+				p.crearUsuariosGrafo();
+				p.relacionarb(array3);
+			}	
+			if (evento.getSource()==btnNewButton_1)
+			{
+				int conta=0;
+				for (String [] i: array2){
+					conta++;
+					if (conta>1){
+						array3.add(i);
+					}
+				}
+				conta=0;
+				for(String[] n: array3){
+					for (String i: n){
+						texto+=i+" ";
+					}
+					texto+="\n";
+				}
 				p.crearUsuariosGrafo();
 				p.relacionarc(array3);
+			}	
+			if (evento.getSource()==btnNewButton_2)
+			{
+				
+				int conta=0;
+				for (String [] i: array2){
+					conta++;
+					if (conta>1){
+						array3.add(i);
+					}
+				}
+				conta=0;
+				for(String[] n: array3){
+					for (String i: n){
+						texto+=i+" ";
+					}
+					texto+="\n";
+				}
+				p.crearUsuariosGrafo();
+				p.relacionar(array3,true);
+			}
+			if (evento.getSource()==btnNewButton_3)
+			{
+				areaDeTexto.setText(p.comunicacion());
 			}
 			
 		}
+		
 
 		/**
 		 * Permite mostrar la ventana que carga 

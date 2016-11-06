@@ -54,7 +54,6 @@ public class Conexion {
 			}
 			return resultado;
 		}
-	
 		//metodo para la muestra de las preguntas realizadas
 		public String consulta(ResultSet resultado){
 			String cadena ="";
@@ -79,18 +78,26 @@ public class Conexion {
 		}
 		public void insertar(String nodo,String id){
 			 try {
-				stmt.executeUpdate("CREATE ("+nodo+": User{name:"+ id+"})");
+				stmt.executeUpdate("CREATE ("+nodo+": User{name:'"+ id+"'})");
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		public void relacionar(String query){
+		public void relacionar(String name1, String name2,String peso){
 			 try {
-					stmt.executeUpdate(query);
+					stmt.executeUpdate("MATCH (x:User {name:'" + name1 + "'})" +
+                            "MATCH (y:User {name:'" + name2 + "'})" +
+                            "MERGE (x)-[:CORREOS {length: '" + peso + "'}]->(y)");
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+		}
+		public void eliminar(){
+			try {
+				stmt.executeUpdate("MATCH (n) " +
+                        "OPTIONAL MATCH (n)-[r]-()"+" delete n,r" );
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 }
