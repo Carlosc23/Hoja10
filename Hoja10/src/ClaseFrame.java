@@ -5,10 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -16,12 +13,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JTextPane;
+import java.awt.Color;
+import java.awt.SystemColor;
+import java.awt.Font;
+import javax.swing.JTextField;
 
 /**
  * Clase que permite cargar una ventana con un area de texto
  * y las opciones de abrir o guardar un archivo
- * @author HENAO
+ * @author Carlos
  *
  */
 public class ClaseFrame extends JFrame implements ActionListener
@@ -37,6 +38,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 		public  ArrayList<String[]> array3 = new ArrayList<String[]>();
 		public ArrayList<String[]> array4 = new ArrayList<String[]>();
 		public String query="";
+		private JTextField txtNoHayArchivo;
 		public ClaseFrame()//constructor
 		{
 			contenedor=getContentPane();
@@ -64,8 +66,8 @@ public class ClaseFrame extends JFrame implements ActionListener
 			/*Propiedades del boton, lo instanciamos, posicionamos y
 			 * activamos los eventos*/
 			botonAbrir= new JButton();
-			botonAbrir.setText("Abrir");
-			botonAbrir.setBounds(50, 331, 80, 23);
+			botonAbrir.setText("Boton 1");
+			botonAbrir.setBounds(30, 331, 91, 23);
 			botonAbrir.addActionListener(this);
 			
 			/*Agregamos los componentes al Contenedor*/
@@ -73,29 +75,47 @@ public class ClaseFrame extends JFrame implements ActionListener
 			contenedor.add(scrollPaneArea);
 			contenedor.add(botonAbrir);
 			
-			JButton btnNewButton = new JButton("Visualizar grafo");
-			btnNewButton.setBounds(161, 331, 157, 23);
+			JButton btnNewButton = new JButton("Boton 2");
+			btnNewButton.setBounds(131, 331, 89, 23);
 			getContentPane().add(btnNewButton);
 			
-			JButton btnNewButton_1 = new JButton("Visualizar relaciones con 6 grafos");
-			btnNewButton_1.setBounds(338, 331, 191, 23);
+			JButton btnNewButton_1 = new JButton("Boton 3");
+			btnNewButton_1.setBounds(230, 331, 94, 23);
 			getContentPane().add(btnNewButton_1);
 			
-			JButton btnNewButton_2 = new JButton("Autoenvio");
-			btnNewButton_2.setBounds(411, 52, 89, 23);
+			JButton btnNewButton_2 = new JButton("Boton 4");
+			btnNewButton_2.setBounds(32, 378, 89, 23);
 			getContentPane().add(btnNewButton_2);
 			
-			JButton btnNewButton_3 = new JButton("Personas mas y menos");
-			btnNewButton_3.setBounds(411, 86, 89, 23);
+			JButton btnNewButton_3 = new JButton("Boton 5");
+			btnNewButton_3.setBounds(131, 378, 89, 23);
 			getContentPane().add(btnNewButton_3);
 			
-			JButton btnNewButton_4 = new JButton("Minima cantia");
-			btnNewButton_4.setBounds(411, 138, 89, 23);
+			JButton btnNewButton_4 = new JButton("Boton 6");
+			btnNewButton_4.setBounds(230, 378, 94, 23);
 			getContentPane().add(btnNewButton_4);
+			
+			JTextPane txtpnInstruccionesnBoton = new JTextPane();
+			txtpnInstruccionesnBoton.setEditable(false);
+			txtpnInstruccionesnBoton.setFont(new Font("Dialog", Font.PLAIN, 14));
+			txtpnInstruccionesnBoton.setBackground(SystemColor.control);
+			txtpnInstruccionesnBoton.setText("Instrucciones: \r\nBoton 1: Cargar datos.csv.\r\nBoton 2: Visualizar grafo.\r\nBoton 3: Visualizar relaciones que tienen mas de 6 correos.\r\nBoton 4: Simplificar grafo.\r\nBoton 5: Page-Rank.\r\nBoton 6: Mostrar personas mas y menos comunicadas.\r\nBoton 7:  Mostrar la cantidad m\u00EDnima de correos que ha enviado una persona directa e indirectamente a otra persona o a todas las otras personas.");
+			txtpnInstruccionesnBoton.setBounds(440, 50, 269, 304);
+			getContentPane().add(txtpnInstruccionesnBoton);
+			
+			txtNoHayArchivo = new JTextField();
+			txtNoHayArchivo.setEditable(false);
+			txtNoHayArchivo.setForeground(Color.RED);
+			txtNoHayArchivo.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 14));
+			txtNoHayArchivo.setText("No hay archivo cargado.");
+			txtNoHayArchivo.setBackground(Color.DARK_GRAY);
+			txtNoHayArchivo.setBounds(440, 365, 204, 34);
+			getContentPane().add(txtNoHayArchivo);
+			txtNoHayArchivo.setColumns(10);
        		//Asigna un titulo a la barra de titulo
 			setTitle("Proyecto");
 			//tamaño de la ventana
-			setSize(750,400);
+			setSize(750,471);
 			//pone la ventana en el Centro de la pantalla
 			setLocationRelativeTo(null);
 			
@@ -125,7 +145,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 				areaDeTexto.setText(texto);
 				Procesos p = new Procesos();
 				p.crearUsuariosGrafo();
-				p.relacionar(array3);
+				p.relacionarc(array3);
 			}
 			
 		}
@@ -136,8 +156,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 		 * @return
 		 */
 		private ArrayList<String[]>  abrirArchivo() {
-					
-			String aux=""; 		
+						
 	 		//texto="";
 	 		String bfRead;
 	 		/*llamamos el metodo que permite cargar la ventana*/
