@@ -3,21 +3,19 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * @author Carlos
+ *
+ */
 public class Main {
+	/**
+	 * @param args
+	 */
 	public static void main (String [] args){
-		try {
-	        Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j","4jneo");
-	        try (Statement stmt = con.createStatement()) {
-	            ResultSet rs = stmt.executeQuery("MATCH (n:User) RETURN n.name");
-	            while (rs.next()) {
-	                System.out.println(rs.getString("n.name"));
-	            }
-	        }
-	        con.close();
+		//Conexion cn = new Conexion();
+		//System.out.println(cn.consulta(cn.ejecutarConsulta("MATCH (n:User) RETURN n.name")));
+		ClaseFrame miVentana = new ClaseFrame();
+		miVentana.setVisible(true);
 
-	    }catch (Exception ex){
-	        System.out.println("AAA");
-	    }
 	}
-	
 }
