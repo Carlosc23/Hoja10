@@ -84,7 +84,7 @@ public class Conexion {
 			}
 		}
 		public void relacionar(String name1, String name2,String peso){
-			 try {
+			try {
 					stmt.executeUpdate("MATCH (x:User {name:'" + name1 + "'})" +
                             "MATCH (y:User {name:'" + name2 + "'})" +
                             "MERGE (x)-[:CORREOS {length: '" + peso + "'}]->(y)");
@@ -99,5 +99,9 @@ public class Conexion {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+		public void simplificar(){
+				 
+				 
 		}
 }

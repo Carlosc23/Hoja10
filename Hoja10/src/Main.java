@@ -9,7 +9,7 @@ public class Main {
 	 */
 	public static void main (String [] args){
 		ClaseFrame miVentana = new ClaseFrame();
-		miVentana.setVisible(true);  
+		miVentana.setVisible(true);   
 		
 	}
 }

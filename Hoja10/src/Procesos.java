@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.ArrayList;
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.algorithm.PageRank;
@@ -17,7 +18,7 @@ public class Procesos {
 	public Node[] nodos;
 	public Edge[] aristas= new Edge[64];
 	PageRank pageRank = new PageRank();
-	public Graph graph;
+	public Graph graph,graph2,graph3;
 	private Conexion con = new Conexion();
 	public String [] nombres={"Per 1","Per 2","Per 3","Per 4","Per 5","Per 6","Per 7","Per 8","Per 9","Per 10","Per 11"
 			,"Per 12","Per 13","Per 14"};
@@ -48,7 +49,7 @@ public class Procesos {
 		graph.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		int conta=0,c=0;	
-		com= new int [14];
+		//com= new int [14];
 		graph.display();
 
 		for (int i=0; i<14;i++){
@@ -60,7 +61,7 @@ public class Procesos {
 						aristas[c].addAttribute("length", n);
 						aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
 						con.relacionar(nombres[i],  nombres[conta-1], n);
-						com[i]+=Integer.parseInt(n);
+						//com[i]+=Integer.parseInt(n);
 						c++;			
 
 					}
@@ -91,7 +92,7 @@ public class Procesos {
 						aristas[c].addAttribute("length", n);
 						aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
 						con.relacionar(nombres[i],  nombres[conta-1], n);
-						com[i]+=Integer.parseInt(n);
+						//com[i]+=Integer.parseInt(n);
 						c++;
 					}	
 				}
@@ -239,6 +240,28 @@ public class Procesos {
 		//System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), graph.getNode(destino),
 		//	dijkstra.getPathLength(graph.getNode(destino)));
 		return dijkstra.getPathLength(graph.getNode(destino));
+	}
+	void simplificarGrafo(){
+		graph2= new SingleGraph("Proyec");
+		graph2.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
+		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		String query = "MATCH (x)-[rel:CORREOS]->(y)\n" +
+                "WHERE x <> y\n" +
+                "RETURN rel.length, x.name, y.name";
+		try {
+			while(con.getQuery(query).next()){
+				Node no=graph2.addNode(con.getQuery(query).getString("x.name"));
+				no.addAttribute("ui.label", con.getQuery(query).getString("x.name"));
+				Edge e= graph2.addEdge(con.getQuery(query).getString("x.name")+con.getQuery(query).getString("y.name"), 
+						con.getQuery(query).getString("x.name"), con.getQuery(query).getString("y.name"), true);
+				e.addAttribute("length", con.getQuery(query).getString("rel.length"));
+				e.addAttribute("label", "" + (int) e.getNumber("length"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		graph2.display();
 	}
 }
 

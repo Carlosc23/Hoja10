@@ -183,7 +183,8 @@ public class ClaseFrame extends JFrame implements ActionListener
 						texto+="\n";
 					}
 					p.crearUsuariosGrafo();
-					p.relacionarb(array3);	
+					p.relacionarb(array3);
+					//p.simplificarGrafo();
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
