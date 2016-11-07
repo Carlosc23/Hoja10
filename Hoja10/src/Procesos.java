@@ -19,7 +19,7 @@ public class Procesos {
 	PageRank pageRank = new PageRank();
 	public Graph graph;
 	private Conexion con = new Conexion();
-	private String [] nombres={"Per 1","Per 2","Per 3","Per 4","Per 5","Per 6","Per 7","Per 8","Per 9","Per 10","Per 11"
+	public String [] nombres={"Per 1","Per 2","Per 3","Per 4","Per 5","Per 6","Per 7","Per 8","Per 9","Per 10","Per 11"
 			,"Per 12","Per 13","Per 14"};
 
 
@@ -142,8 +142,21 @@ public class Procesos {
 			e.printStackTrace();
 		}
 	}
-	String comunicacion(){
+	String comunicacion(ArrayList<String[]> relaciones){
 		//ordenamos en forma ascendente el arreglo de números enteros y lo imprimimos por pantalla
+		int conta;
+		com= new int [14];
+		for (int i=0; i<14;i++){
+			conta=0;
+			for (String n: relaciones.get(i)){
+				if (conta>=1){
+					if(!(n.equals("0"))){
+						com[i]+=Integer.parseInt(n);			
+					}
+				}
+				conta++;
+			}
+		}
 		String texto="Los 3 empleados menos comunicados son:\n";
 		ordSelAsc(com);
 		int i=0;

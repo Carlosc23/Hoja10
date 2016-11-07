@@ -138,91 +138,149 @@ public class ClaseFrame extends JFrame implements ActionListener
 		public void actionPerformed(ActionEvent evento) {
 			if (evento.getSource()==btnCargar)
 			{
-				ArrayList<String[]>  array2=abrirArchivo();
+				abrirArchivo();
+				
 			}
-			if (evento.getSource()==botonAbrir)
-			{
-				int conta=0;
-				for (String [] i: array2){
-					conta++;
-					if (conta>1){
-						array3.add(i);
+			if (evento.getSource()==botonAbrir){
+				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
+					int conta=0;
+					for (String [] i: array2){
+						conta++;
+						if (conta>1){
+							array3.add(i);
+						}
 					}
-				}
-				conta=0;
-				for(String[] n: array3){
-					for (String i: n){
-						texto+=i+" ";
+					conta=0;
+					for(String[] n: array3){
+						for (String i: n){
+							texto+=i+" ";
+						}
+						texto+="\n";
 					}
-					texto+="\n";
+					p.crearUsuariosGrafo();
+					p.relacionar(array3,false);
 				}
-				p.crearUsuariosGrafo();
-				p.relacionar(array3,false);
+				else{
+					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
+							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+				}
 				
 			}
 			if (evento.getSource()==btnNewButton)
 			{
-				int conta=0;
-				for (String [] i: array2){
-					conta++;
-					if (conta>1){
-						array3.add(i);
+				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
+					int conta=0;
+					for (String [] i: array2){
+						conta++;
+						if (conta>1){
+							array3.add(i);
+						}
 					}
-				}
-				conta=0;
-				for(String[] n: array3){
-					for (String i: n){
-						texto+=i+" ";
+					conta=0;
+					for(String[] n: array3){
+						for (String i: n){
+							texto+=i+" ";
+						}
+						texto+="\n";
 					}
-					texto+="\n";
+					p.crearUsuariosGrafo();
+					p.relacionarb(array3);	
 				}
-				p.crearUsuariosGrafo();
-				p.relacionarb(array3);
+				else{
+					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
+							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+				}
 			}	
 			if (evento.getSource()==btnNewButton_1)
 			{
-				int conta=0;
-				for (String [] i: array2){
-					conta++;
-					if (conta>1){
-						array3.add(i);
+				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
+					int conta=0;
+					for (String [] i: array2){
+						conta++;
+						if (conta>1){
+							array3.add(i);
+						}
 					}
-				}
-				conta=0;
-				for(String[] n: array3){
-					for (String i: n){
-						texto+=i+" ";
+					conta=0;
+					for(String[] n: array3){
+						for (String i: n){
+							texto+=i+" ";
+						}
+						texto+="\n";
 					}
-					texto+="\n";
+					p.crearUsuariosGrafo();
+					p.relacionarc(array3);
 				}
-				p.crearUsuariosGrafo();
-				p.relacionarc(array3);
+				else{
+					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
+							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+				}
 			}	
 			if (evento.getSource()==btnNewButton_2)
 			{
-				
-				int conta=0;
-				for (String [] i: array2){
-					conta++;
-					if (conta>1){
-						array3.add(i);
+				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
+					int conta=0;
+					for (String [] i: array2){
+						conta++;
+						if (conta>1){
+							array3.add(i);
+						}
+					}
+					conta=0;
+					for(String[] n: array3){
+						for (String i: n){
+							texto+=i+" ";
+						}
+						texto+="\n";
+					}
+					p.crearUsuariosGrafo();
+					p.relacionar(array3,true);
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
+							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			if (evento.getSource()==btnNewButton_3){
+				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
+					int conta=0;
+					for (String [] i: array2){
+						conta++;
+						if (conta>1){
+							array3.add(i);
+						}
+					}
+					conta=0;
+					for(String[] n: array3){
+						for (String i: n){
+							texto+=i+" ";
+						}
+						texto+="\n";
+					}
+					areaDeTexto.setText(p.comunicacion(array3));
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
+							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			if (evento.getSource()==btnNewButton_4){
+				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
+					String origen = (String) JOptionPane.showInputDialog(null,"Seleccione un empleado de origen ",
+							   "ORIGEN", JOptionPane.QUESTION_MESSAGE, null,
+							  p.nombres,"Seleccione");
+					if(origen!=null){
+						String destino = (String) JOptionPane.showInputDialog(null,"Seleccione un empleado de origen ",
+								   "ORIGEN", JOptionPane.QUESTION_MESSAGE, null,
+								  p.nombres,"Seleccione");
 					}
 				}
-				conta=0;
-				for(String[] n: array3){
-					for (String i: n){
-						texto+=i+" ";
-					}
-					texto+="\n";
+				else{
+					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
+							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 				}
-				p.crearUsuariosGrafo();
-				p.relacionar(array3,true);
+
 			}
-			if (evento.getSource()==btnNewButton_3)
-			{
-				areaDeTexto.setText(p.comunicacion());
-			}
-			
 		}
 		
 
@@ -231,7 +289,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 		 * archivos en el area de texto
 		 * @return
 		 */
-		private ArrayList<String[]>  abrirArchivo() {
+		private void  abrirArchivo() {
 						
 	 		//texto="";
 	 		String bfRead;
@@ -244,6 +302,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 			 *en el area de texto*/
 			if(abre!=null)
 			{ 				
+				txtNoHayArchivo.setText("Archivo Cargado");
 				try {
 					BufferedReader ar = new BufferedReader(new FileReader(abre));
 					while ((bfRead = ar.readLine()) != null) {
@@ -254,6 +313,6 @@ public class ClaseFrame extends JFrame implements ActionListener
 					JOptionPane.showMessageDialog(null, "No se encontro archivo");
 				}
 			}
-				return array2;
+				
 		}
 	}
