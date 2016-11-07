@@ -1,5 +1,5 @@
-
 import java.util.ArrayList;
+import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.algorithm.PageRank;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -12,14 +12,16 @@ import org.graphstream.graph.implementations.SingleGraph;
  */
 public class Procesos {
 	/*Atributos*/
-	private ArrayList<String[]> array2 = new ArrayList<String[]>();
 	private int com[];
+	public double pesos[];
 	public Node[] nodos;
 	public Edge[] aristas= new Edge[64];
 	PageRank pageRank = new PageRank();
 	public Graph graph;
 	private Conexion con = new Conexion();
 	public String [] nombres={"Per 1","Per 2","Per 3","Per 4","Per 5","Per 6","Per 7","Per 8","Per 9","Per 10","Per 11"
+			,"Per 12","Per 13","Per 14"};
+	public String [] nombres2={"","Per 1","Per 2","Per 3","Per 4","Per 5","Per 6","Per 7","Per 8","Per 9","Per 10","Per 11"
 			,"Per 12","Per 13","Per 14"};
 
 
@@ -55,7 +57,8 @@ public class Procesos {
 				if (conta>=1){
 					if(!(n.equals("0"))){
 						aristas[c]=graph.addEdge(nombres[i]+nombres[conta-1], nombres[i], nombres[conta-1], true);
-						aristas[c].addAttribute("ui.label", n);
+						aristas[c].addAttribute("length", n);
+						aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
 						con.relacionar(nombres[i],  nombres[conta-1], n);
 						com[i]+=Integer.parseInt(n);
 						c++;			
@@ -85,7 +88,8 @@ public class Procesos {
 				if (conta>=1){
 					if(Integer.parseInt(n)>=6){
 						aristas[c]=graph.addEdge(nombres[i]+nombres[conta-1], nombres[i], nombres[conta-1], true);
-						aristas[c].addAttribute("ui.label", n);
+						aristas[c].addAttribute("length", n);
+						aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
 						con.relacionar(nombres[i],  nombres[conta-1], n);
 						com[i]+=Integer.parseInt(n);
 						c++;
@@ -113,7 +117,8 @@ public class Procesos {
 						if(nombres[i]!=nombres[conta-1]){
 
 							aristas[c]=graph.addEdge(nombres[i]+nombres[conta-1], nombres[i], nombres[conta-1], true);
-							aristas[c].addAttribute("ui.label", n);
+							aristas[c].addAttribute("length", n);
+							aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
 							con.relacionar(nombres[i],  nombres[conta-1], n);
 							c++;	
 
@@ -138,7 +143,6 @@ public class Procesos {
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -201,6 +205,40 @@ public class Procesos {
 				arreglo[min] = aux;
 			}
 		}
+	}
+	/**
+	 * @param origen
+	 */
+	void minima(String origen){
+		pesos = new  double[14];
+		int i=0;
+		Dijkstra dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
+		dijkstra.init(graph);
+		dijkstra.setSource(graph.getNode(origen));
+		dijkstra.compute();
+		// Print the lengths of all the shortest paths
+		for (Node node : graph){
+			pesos[i]=dijkstra.getPathLength(node);
+			//System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), node,
+			//	dijkstra.getPathLength(node));
+			i++;	
+		}
+
+	}
+	/**
+	 * @param origen
+	 * @param destino
+	 * @return
+	 */
+	double minima(String origen,String destino ){
+		Dijkstra dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
+		dijkstra.init(graph);
+		dijkstra.setSource(graph.getNode(origen));
+		dijkstra.compute();
+		// Print the lengths of all the shortest paths
+		//System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), graph.getNode(destino),
+		//	dijkstra.getPathLength(graph.getNode(destino)));
+		return dijkstra.getPathLength(graph.getNode(destino));
 	}
 }
 

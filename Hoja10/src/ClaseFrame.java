@@ -1,4 +1,3 @@
-
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +28,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 	{
 		private Container contenedor;
 		JLabel labelTitulo;/*declaramos el objeto Label*/
-		JTextArea areaDeTexto;
+		public JTextArea areaDeTexto;
 		JButton botonAbrir,btnNewButton,btnNewButton_1,btnNewButton_2,btnNewButton_3
 		,btnNewButton_4,btnCargar;/*declaramos el objeto Boton*/
 		JScrollPane scrollPaneArea;
@@ -272,14 +271,29 @@ public class ClaseFrame extends JFrame implements ActionListener
 					if(origen!=null){
 						String destino = (String) JOptionPane.showInputDialog(null,"Seleccione un empleado de origen ",
 								   "ORIGEN", JOptionPane.QUESTION_MESSAGE, null,
-								  p.nombres,"Seleccione");
+								  p.nombres2,"Seleccione");
+						if(!destino.equals("")){
+							areaDeTexto.setText(origen+" ha enviado "+p.minima(origen,destino)+" mensajes a:" +destino );
+							
+						}
+						else{
+							int conta=0;
+							String t="";
+							p.minima(origen);
+							for ( double i: p.pesos){
+								t+=origen+" ha enviado "+i+" mensajes a:" +p.nombres[conta]+"\n";
+								conta++;
+							}
+							areaDeTexto.setText(t);
+						}
 					}
+					
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
 							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 				}
-
+				
 			}
 		}
 		
