@@ -19,13 +19,13 @@ import java.awt.Font;
 import javax.swing.JTextField;
 
 /**
- * Clase que permite cargar una ventana con un area de texto
- * y las opciones de abrir o guardar un archivo
- * @author Carlos
- *
+ * @author Carlos Calderon , Marisol Barillas , Jorge Azmitia
+ *  @version 4.0 
+ * Clase que se encarga de dar la interfaz al usuario.
  */
 public class ClaseFrame extends JFrame implements ActionListener
 	{
+		/*Atributos*/
 		private Container contenedor;
 		JLabel labelTitulo;/*declaramos el objeto Label*/
 		public JTextArea areaDeTexto;
@@ -36,18 +36,19 @@ public class ClaseFrame extends JFrame implements ActionListener
 		String texto="";
 		private ArrayList<String[]> array2 = new ArrayList<String[]>();
 		public  ArrayList<String[]> array3 = new ArrayList<String[]>();
-		public ArrayList<String[]> array4 = new ArrayList<String[]>();
-		public String query="";
 		private JTextField txtNoHayArchivo;
 		private Procesos p = new Procesos();
-		public ClaseFrame()//constructor
-		{
+		
+		/**
+		 * Constructor que arma el GUI.
+		 */
+		public ClaseFrame(){
 			contenedor=getContentPane();
 			contenedor.setLayout(null);
 			
 			/*Creamos el objeto*/
 			fileChooser=new JFileChooser();
-			
+			 
 			/*Propiedades del Label, lo instanciamos, posicionamos y
 			 * activamos los eventos*/
 			labelTitulo= new JLabel();
@@ -133,31 +134,29 @@ public class ClaseFrame extends JFrame implements ActionListener
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent evento) {
-			if (evento.getSource()==btnCargar)
-			{
+			//Si presiono el boton de cargar
+			if (evento.getSource()==btnCargar){
 				abrirArchivo();
+				int conta=0;
+				for (String [] i: array2){
+					conta++;
+					if (conta>1){
+						array3.add(i);
+					}
+				}
+				
 				
 			}
+			//Si presiono el boton 1
 			if (evento.getSource()==botonAbrir){
 				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
-					int conta=0;
-					for (String [] i: array2){
-						conta++;
-						if (conta>1){
-							array3.add(i);
-						}
-					}
-					conta=0;
-					for(String[] n: array3){
-						for (String i: n){
-							texto+=i+" ";
-						}
-						texto+="\n";
-					}
-					p.crearUsuariosGrafo();
-					p.relacionar(array3,false);
+					p.crearUsuariosGrafo(array3);
+					p.armarGrafo(1,false);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
@@ -165,107 +164,55 @@ public class ClaseFrame extends JFrame implements ActionListener
 				}
 				
 			}
-			if (evento.getSource()==btnNewButton)
-			{
+			//Si presiono el boton 2
+			if (evento.getSource()==btnNewButton){
 				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
-					int conta=0;
-					for (String [] i: array2){
-						conta++;
-						if (conta>1){
-							array3.add(i);
-						}
-					}
-					conta=0;
-					for(String[] n: array3){
-						for (String i: n){
-							texto+=i+" ";
-						}
-						texto+="\n";
-					}
-					p.crearUsuariosGrafo();
-					p.relacionarb(array3);
-					//p.simplificarGrafo();
+					p.crearUsuariosGrafo(array3);
+					p.armarGrafo(2,false);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
 							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 				}
 			}	
-			if (evento.getSource()==btnNewButton_1)
-			{
+			//Si presiono el boton 3
+			if (evento.getSource()==btnNewButton_1){
 				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
-					int conta=0;
-					for (String [] i: array2){
-						conta++;
-						if (conta>1){
-							array3.add(i);
-						}
-					}
-					conta=0;
-					for(String[] n: array3){
-						for (String i: n){
-							texto+=i+" ";
-						}
-						texto+="\n";
-					}
-					p.crearUsuariosGrafo();
-					p.relacionarc(array3);
+					p.crearUsuariosGrafo(array3);
+					p.armarGrafo(3,false);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
 							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 				}
 			}	
-			if (evento.getSource()==btnNewButton_2)
-			{
+			//Si presiono el boton 4
+			if (evento.getSource()==btnNewButton_2){
 				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
-					int conta=0;
-					for (String [] i: array2){
-						conta++;
-						if (conta>1){
-							array3.add(i);
-						}
-					}
-					conta=0;
-					for(String[] n: array3){
-						for (String i: n){
-							texto+=i+" ";
-						}
-						texto+="\n";
-					}
-					p.crearUsuariosGrafo();
-					p.relacionar(array3,true);
+					p.crearUsuariosGrafo(array3);
+					p.armarGrafo(1,true);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
 							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			//Si presiono el boton 5
 			if (evento.getSource()==btnNewButton_3){
 				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
-					int conta=0;
-					for (String [] i: array2){
-						conta++;
-						if (conta>1){
-							array3.add(i);
-						}
-					}
-					conta=0;
-					for(String[] n: array3){
-						for (String i: n){
-							texto+=i+" ";
-						}
-						texto+="\n";
-					}
-					areaDeTexto.setText(p.comunicacion(array3));
+					p.crearUsuariosGrafo(array3);
+					areaDeTexto.setText(p.comunicacion());
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "NO HA CARGADO EL ARCHIVO",
 							  "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			//Si presiono el boton 6
 			if (evento.getSource()==btnNewButton_4){
 				if (txtNoHayArchivo.getText().equals("Archivo Cargado")){
+					p.crearUsuariosGrafo(array3);
+					p.armarGrafo(4,false);
 					String origen = (String) JOptionPane.showInputDialog(null,"Seleccione un empleado de origen ",
 							   "ORIGEN", JOptionPane.QUESTION_MESSAGE, null,
 							  p.nombres,"Seleccione");
@@ -302,7 +249,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 		/**
 		 * Permite mostrar la ventana que carga 
 		 * archivos en el area de texto
-		 * @return
+		 * @return arreglo con los campos del texto.
 		 */
 		private void  abrirArchivo() {
 						

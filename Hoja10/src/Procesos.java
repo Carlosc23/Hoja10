@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.graphstream.algorithm.Dijkstra;
@@ -8,17 +9,16 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
- * @author Carlos
- *
+ *  @author Carlos Calderon , Marisol Barillas , Jorge Azmitia
+ *  @version 4.0 
+ *  Clase para hacer armar grafos, y desplegar relaciones de empleados.
  */
 public class Procesos {
 	/*Atributos*/
-	private int com[];
 	public double pesos[];
 	public Node[] nodos;
-	public Edge[] aristas= new Edge[64];
 	PageRank pageRank = new PageRank();
-	public Graph graph,graph2,graph3;
+	public Graph graph;
 	private Conexion con = new Conexion();
 	public String [] nombres={"Per 1","Per 2","Per 3","Per 4","Per 5","Per 6","Per 7","Per 8","Per 9","Per 10","Per 11"
 			,"Per 12","Per 13","Per 14"};
@@ -26,112 +26,38 @@ public class Procesos {
 			,"Per 12","Per 13","Per 14"};
 
 
+	
 	/**
-	 * 
+	 * @param relaciones Contiene los pesos de las aristas.
+	 * Metodo para llenar la db.
 	 */
-	void crearUsuariosGrafo(){
+	void crearUsuariosGrafo(ArrayList<String[]> relaciones){
 		con.eliminar();
 		graph=null;
 		graph= new SingleGraph("Proyecto");
+		//graph2= new SingleGraph("Proyecto2");
 		nodos = new Node [14];	
 		for (int i=0;i<=13;i++){
 			con.insertar(nombres[i].replace(" ",""), nombres[i]);
 			nodos[i]=graph.addNode(nombres[i]);
 			nodos[i].addAttribute("ui.label", nombres[i]);
-
+			//graph2.addNode(nombres[i].replace(" ","")).addAttribute("ui.label", nombres[i]);
 		}
-	}
-
-	/**
-	 * @param relaciones
-	 */
-	void relacionar(ArrayList<String[]> relaciones,boolean page){
-		graph.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
-		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		int conta=0,c=0;	
-		//com= new int [14];
-		graph.display();
-
+		int conta=0;	
 		for (int i=0; i<14;i++){
 			conta=0;
 			for (String n: relaciones.get(i)){
 				if (conta>=1){
 					if(!(n.equals("0"))){
-						aristas[c]=graph.addEdge(nombres[i]+nombres[conta-1], nombres[i], nombres[conta-1], true);
-						aristas[c].addAttribute("length", n);
-						aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
-						con.relacionar(nombres[i],  nombres[conta-1], n);
-						//com[i]+=Integer.parseInt(n);
-						c++;			
-
+						con.relacionar(nombres[i],  nombres[conta-1], n);			
 					}
 				}
 				conta++;
-
-			}
-		}
-		if (page){
-			pageRank();
-		}
-
-	}
-	/**
-	 * @param relaciones
-	 */
-	void relacionarb(ArrayList<String[]> relaciones){
-		graph.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
-		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		int conta=0,c=0;	
-		for (int i=0; i<14;i++){
-			conta=0;
-			for (String n: relaciones.get(i)){
-				//System.out.println(conta);
-				if (conta>=1){
-					if(Integer.parseInt(n)>=6){
-						aristas[c]=graph.addEdge(nombres[i]+nombres[conta-1], nombres[i], nombres[conta-1], true);
-						aristas[c].addAttribute("length", n);
-						aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
-						con.relacionar(nombres[i],  nombres[conta-1], n);
-						//com[i]+=Integer.parseInt(n);
-						c++;
-					}	
-				}
-				conta++;
-			}
-		}
-		graph.display();
-	}
-	/**
-	 * @param relaciones
-	 */
-	void relacionarc(ArrayList<String[]> relaciones){
-		graph.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
-		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		int conta=0,c=0;	
-		graph.display();
-		for (int i=0; i<14;i++){
-			conta=0;
-			for (String n: relaciones.get(i)){
-				//System.out.println(conta);
-				if (conta>=1){
-					if(!(n.equals("0"))){
-						if(nombres[i]!=nombres[conta-1]){
-
-							aristas[c]=graph.addEdge(nombres[i]+nombres[conta-1], nombres[i], nombres[conta-1], true);
-							aristas[c].addAttribute("length", n);
-							aristas[c].addAttribute("label", "" + (int) aristas[c].getNumber("length"));
-							con.relacionar(nombres[i],  nombres[conta-1], n);
-							c++;	
-
-						}
-					}	
-				}
-				conta++;
 			}
 		}
 	}
 	/**
-	 * 
+	 * Metodo para hacer el pageRank al grafo correspondiente.
 	 */
 	void pageRank(){
 		pageRank.setVerbose(true);
@@ -147,68 +73,10 @@ public class Procesos {
 			e.printStackTrace();
 		}
 	}
-	String comunicacion(ArrayList<String[]> relaciones){
-		//ordenamos en forma ascendente el arreglo de números enteros y lo imprimimos por pantalla
-		int conta;
-		com= new int [14];
-		for (int i=0; i<14;i++){
-			conta=0;
-			for (String n: relaciones.get(i)){
-				if (conta>=1){
-					if(!(n.equals("0"))){
-						com[i]+=Integer.parseInt(n);			
-					}
-				}
-				conta++;
-			}
-		}
-		String texto="Los 3 empleados menos comunicados son:\n";
-		ordSelAsc(com);
-		int i=0;
-		for (int num : com) {
-			i++;
-			if(i<4){
-				//System.out.println("Per"+i+" "+num);
-				texto+="Per"+i+" con "+num+" mensajes enviados.\n";
-			}
-			if(i>11){
-				if (i==12){
-					texto+="Los 3 empleados mas comunicados son: \n";
-				}
-				//System.out.println("Per"+i+" "+num);	
-				texto+="Per"+i+" con "+num+" mensajes enviados.\n";
-			}
-		}
-		return texto;
-	}
 	/**
-	 * Este método ordena en forma ascendente el arreglo pasado como argumento usando el
-	 * algoritmo de selección.
-	 * 
-	 * @param arreglo el arreglo que sera ordenado.
-	 */
-	static void ordSelAsc(int[] arreglo) {
-		//iteramos sobre los elementos del arreglo
-		for (int i = 0 ; i < arreglo.length - 1 ; i++) {
-			int min = i;
-
-			//buscamos el menor número
-			for (int j = i + 1 ; j < arreglo.length ; j++) {
-				if (arreglo[j] < arreglo[min]) {
-					min = j;    //encontramos el menor número
-				}
-			}
-
-			if (i != min) {
-				//permutamos los valores
-				int aux = arreglo[i];
-				arreglo[i] = arreglo[min];
-				arreglo[min] = aux;
-			}
-		}
-	}
-	/**
-	 * @param origen
+	 * @param origen Nodo origen del correo.
+	 * Metodo para   tener la cantidad minima de correos que ha enviado una persona directa e 
+	 * indirectamente a otra persona o a todas las otras personas. 
 	 */
 	void minima(String origen){
 		pesos = new  double[14];
@@ -220,16 +88,15 @@ public class Procesos {
 		// Print the lengths of all the shortest paths
 		for (Node node : graph){
 			pesos[i]=dijkstra.getPathLength(node);
-			//System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), node,
-			//	dijkstra.getPathLength(node));
 			i++;	
 		}
 
 	}
+	
 	/**
-	 * @param origen
-	 * @param destino
-	 * @return
+	 * @param origen	Nodo origen del correo.
+	 * @param destino	Nodo destino del correo.
+	 * @return			Los caminos mas cortos.
 	 */
 	double minima(String origen,String destino ){
 		Dijkstra dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
@@ -241,27 +108,97 @@ public class Procesos {
 		//	dijkstra.getPathLength(graph.getNode(destino)));
 		return dijkstra.getPathLength(graph.getNode(destino));
 	}
-	void simplificarGrafo(){
-		graph2= new SingleGraph("Proyec");
-		graph2.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
+	
+	/**
+	 * @param opc	Entero para saber en base a que criterio hara el grafo.
+	 * @param page	boolean para indicar si hara el pageRank.
+	 * Metodo para armar el grafo de GraphStream. En base a la db.
+	 */
+	void armarGrafo(int opc,boolean page){
+		//graph2= new SingleGraph("Proyec");
+		ResultSet rs = null;
+		graph.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		String query = "MATCH (x)-[rel:CORREOS]->(y)\n" +
+		String query2 = "MATCH (x)-[rel:CORREOS]->(y)\n" +
                 "WHERE x <> y\n" +
                 "RETURN rel.length, x.name, y.name";
+		String query = "MATCH (x)-[rel:CORREOS]->(y)\n" +
+                "RETURN rel.length, x.name, y.name";
+		String query3 = "MATCH (x)-[rel:CORREOS]->(y)\n" +
+                "WHERE rel.length >= 6\n" +
+                "RETURN rel.length, x.name, y.name";
+		switch(opc){
+		case 1:
+			rs = con.getQuery(query);
+			break;
+		case 2:
+			rs = con.getQuery(query2);
+			break;
+		case 3:
+			rs = con.getQuery(query3);
+			break;
+		case 4:
+			rs = con.getQuery(query);
+			break;
+		}
+		if(opc!=4){
+			graph.display();
+		}
 		try {
-			while(con.getQuery(query).next()){
-				Node no=graph2.addNode(con.getQuery(query).getString("x.name"));
-				no.addAttribute("ui.label", con.getQuery(query).getString("x.name"));
-				Edge e= graph2.addEdge(con.getQuery(query).getString("x.name")+con.getQuery(query).getString("y.name"), 
-						con.getQuery(query).getString("x.name"), con.getQuery(query).getString("y.name"), true);
-				e.addAttribute("length", con.getQuery(query).getString("rel.length"));
+			while(rs.next()){
+				Edge e= graph.addEdge(rs.getString("x.name").replace(" ","")+rs.getString("y.name").replace(" ",""),  
+						rs.getString("x.name"), rs.getString("y.name"), true);
+				e.addAttribute("length", rs.getString("rel.length"));
 				e.addAttribute("label", "" + (int) e.getNumber("length"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if (page){
+			pageRank();
+		}
+	}
+	
+	/**
+	 * @return Cadena con los empleados mas y menos comunicados
+	 * Metodo que recorre la db para saber cuales son los empleados mas y 
+	 * menos comunicados.
+	 */
+	String comunicacion(){
+		String texto="Los 3 empleados menos comunicados son:\n";
+		String query= "MATCH (x)-[rel:CORREOS]->()\n" +
+                "RETURN x.name, sum(rel.length) as num\n" +
+                "ORDER BY num asc";
+		String query2= "MATCH (x)-[rel:CORREOS]->()\n" +
+                "RETURN x.name, sum(rel.length) as num\n" +
+                "ORDER BY num desc";
+		ResultSet rs = null;
+		int n=0;
+		rs = con.getQuery(query);
+		try {
+			while(rs.next()){
+				
+				texto+=rs.getString("x.name")+"con "+rs.getString("num")+" mensajes enviados\n";
+				n++;
+				if(n>=3){
+					break;
+				}
+			}
+			texto+="Los 3 empleados mas comunicados son: \n";
+			rs = con.getQuery(query2);
+			while(rs.next()){
+				texto+=rs.getString("x.name")+" con "+rs.getString("num")+" mensajes enviados\n";
+				n++;
+				if(n>=6){
+					break;
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		graph2.display();
+		return texto;
 	}
 }
 

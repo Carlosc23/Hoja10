@@ -6,15 +6,21 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 
+/**
+ *@author Carlos Calderon , Marisol Barillas , Jorge Azmitia
+ *@version 4.0 
+ * Clase para hacer manejos con neo4j.
+ */
 public class Conexion {
-	//Atributos
+	/*Atributos*/
 		private Connection con;
 		private Statement stmt;
 		private final String USER="neo4j";
 		private final String PASSWORD= "4jneo";
 		static final String  _URL = "jdbc:neo4j:bolt://localhost";
-
-		//Metodo constructor
+		/**
+		 * Metodo constructor
+		 */
 		public Conexion(){
 			try{
 				con = DriverManager.getConnection(_URL, USER,PASSWORD);	
@@ -26,20 +32,11 @@ public class Conexion {
 			
 
 		}
-	
-		
-		//Metodo para ejecutar una consulta
-		public ResultSet ejecutarConsulta(String consulta){
-			ResultSet resultado = null;
-			try{
-				resultado = stmt.executeQuery(consulta);
-			}catch(SQLException e){
-				System.out.println("eror");
-			}
-			return resultado;
-		
-		}
-		//Para consultar en alguna tabla
+		/**
+		 * @param _query el query para consultar.
+		 * @return la coleccion
+		 * Metodo para consultar en la db.
+		 */
 		public ResultSet getQuery(String _query){
 			Statement state = null;
 			ResultSet resultado = null;
@@ -54,28 +51,12 @@ public class Conexion {
 			}
 			return resultado;
 		}
-		//metodo para la muestra de las preguntas realizadas
-		public String consulta(ResultSet resultado){
-			String cadena ="";
-
-			try {
-				//String consulta = "SELECT FROM tutorias WHERE curso = '"+Materia+"'" ;
-				//resultado = Conexion.getInstancia().ejecutarConsulta(consulta);
-				while(resultado.next()){
-					cadena += resultado.getString("n.name")+"\n";
-					
-				}	
-			} 
-			catch (SQLException e) {
-				
-				e.printStackTrace();
-			}
-			catch(NullPointerException  e1){
-				
-			}
-			return cadena;
-			
-		}
+		
+		/**
+		 * @param nodo Nombre del nodo.
+		 * @param id   Nombre del usuario.
+		 * Metodo para insertar un nodo en la db.
+		 */
 		public void insertar(String nodo,String id){
 			 try {
 				stmt.executeUpdate("CREATE ("+nodo+": User{name:'"+ id+"'})");
@@ -83,15 +64,25 @@ public class Conexion {
 				e.printStackTrace();
 			}
 		}
+		
+		/**
+		 * @param name1	Nombre del nodo origen
+		 * @param name2 Nombre del nodo destino
+		 * @param peso	Cantidad de correos representada con length.
+		 * Metodo para hacer las relaciones entre nodos.
+		 */
 		public void relacionar(String name1, String name2,String peso){
 			try {
 					stmt.executeUpdate("MATCH (x:User {name:'" + name1 + "'})" +
                             "MATCH (y:User {name:'" + name2 + "'})" +
-                            "MERGE (x)-[:CORREOS {length: '" + peso + "'}]->(y)");
+                            "MERGE (x)-[:CORREOS {length: " + peso + "}]->(y)");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 		}
+		/**
+		 * Metodo para limpiar la base de datos.
+		 */
 		public void eliminar(){
 			try {
 				stmt.executeUpdate("MATCH (n) " +
@@ -99,9 +90,5 @@ public class Conexion {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
-		public void simplificar(){
-				 
-				 
 		}
 }
