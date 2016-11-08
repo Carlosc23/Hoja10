@@ -10,7 +10,7 @@ import org.graphstream.graph.implementations.SingleGraph;
 
 /**
  *  @author Carlos Calderon , Marisol Barillas , Jorge Azmitia
- *  @version 4.0 
+ *  @version 4.1 
  *  Clase para hacer armar grafos, y desplegar relaciones de empleados.
  */
 public class Procesos {
@@ -26,7 +26,7 @@ public class Procesos {
 			,"Per 12","Per 13","Per 14"};
 
 
-	
+
 	/**
 	 * @param relaciones Contiene los pesos de las aristas.
 	 * Metodo para llenar la db.
@@ -92,7 +92,7 @@ public class Procesos {
 		}
 
 	}
-	
+
 	/**
 	 * @param origen	Nodo origen del correo.
 	 * @param destino	Nodo destino del correo.
@@ -104,11 +104,9 @@ public class Procesos {
 		dijkstra.setSource(graph.getNode(origen));
 		dijkstra.compute();
 		// Print the lengths of all the shortest paths
-		//System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), graph.getNode(destino),
-		//	dijkstra.getPathLength(graph.getNode(destino)));
 		return dijkstra.getPathLength(graph.getNode(destino));
 	}
-	
+
 	/**
 	 * @param opc	Entero para saber en base a que criterio hara el grafo.
 	 * @param page	boolean para indicar si hara el pageRank.
@@ -119,14 +117,14 @@ public class Procesos {
 		ResultSet rs = null;
 		graph.addAttribute("ui.stylesheet", "node {fill-color: red; size-mode: dyn-size;} edge {fill-color:grey;}");
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		String query2 = "MATCH (x)-[rel:CORREOS]->(y)\n" +
-                "WHERE x <> y\n" +
-                "RETURN rel.length, x.name, y.name";
-		String query = "MATCH (x)-[rel:CORREOS]->(y)\n" +
-                "RETURN rel.length, x.name, y.name";
-		String query3 = "MATCH (x)-[rel:CORREOS]->(y)\n" +
-                "WHERE rel.length >= 6\n" +
-                "RETURN rel.length, x.name, y.name";
+		String query2 = "MATCH (n)-[rel:CORREOS]->(m)\n" +
+				"WHERE n <> m\n" +
+				"RETURN rel.length, n.name, m.name";
+		String query = "MATCH (n)-[rel:CORREOS]->(m)\n" +
+				"RETURN rel.length, n.name, m.name";
+		String query3 = "MATCH (n)-[rel:CORREOS]->(m)\n" +
+				"WHERE rel.length >= 6\n" +
+				"RETURN rel.length, n.name, m.name";
 		switch(opc){
 		case 1:
 			rs = con.getQuery(query);
@@ -146,20 +144,20 @@ public class Procesos {
 		}
 		try {
 			while(rs.next()){
-				Edge e= graph.addEdge(rs.getString("x.name").replace(" ","")+rs.getString("y.name").replace(" ",""),  
-						rs.getString("x.name"), rs.getString("y.name"), true);
+				Edge e= graph.addEdge(rs.getString("n.name").replace(" ","")+rs.getString("m.name").replace(" ",""),  
+						rs.getString("n.name"), rs.getString("m.name"), true);
 				e.addAttribute("length", rs.getString("rel.length"));
 				e.addAttribute("label", "" + (int) e.getNumber("length"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (page){
 			pageRank();
 		}
 	}
-	
+
 	/**
 	 * @return Cadena con los empleados mas y menos comunicados
 	 * Metodo que recorre la db para saber cuales son los empleados mas y 
@@ -168,24 +166,24 @@ public class Procesos {
 	String comunicacion(){
 		String texto="Los 3 empleados menos comunicados son:\n";
 		String query= "MATCH (x)-[rel:CORREOS]->()\n" +
-                "RETURN x.name, sum(rel.length) as num\n" +
-                "ORDER BY num asc";
+				"RETURN x.name, sum(rel.length) as num\n" +
+				"ORDER BY num asc";
 		String query2= "MATCH (x)-[rel:CORREOS]->()\n" +
-                "RETURN x.name, sum(rel.length) as num\n" +
-                "ORDER BY num desc";
+				"RETURN x.name, sum(rel.length) as num\n" +
+				"ORDER BY num desc";
 		ResultSet rs = null;
 		int n=0;
 		rs = con.getQuery(query);
 		try {
 			while(rs.next()){
-				
-				texto+=rs.getString("x.name")+"con "+rs.getString("num")+" mensajes enviados\n";
+
+				texto+=rs.getString("x.name")+" con "+rs.getString("num")+" mensajes enviados\n";
 				n++;
 				if(n>=3){
 					break;
 				}
 			}
-			texto+="Los 3 empleados mas comunicados son: \n";
+			texto+="Los 3 empleados mas comunicados son:\n";
 			rs = con.getQuery(query2);
 			while(rs.next()){
 				texto+=rs.getString("x.name")+" con "+rs.getString("num")+" mensajes enviados\n";
@@ -195,10 +193,8 @@ public class Procesos {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return texto;
 	}
 }
-

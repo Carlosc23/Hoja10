@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 
 /**
  * @author Carlos Calderon , Marisol Barillas , Jorge Azmitia
- *  @version 4.0 
+ *  @version 4.1
  * Clase que se encarga de dar la interfaz al usuario.
  */
 public class ClaseFrame extends JFrame implements ActionListener
@@ -274,7 +274,7 @@ public class ClaseFrame extends JFrame implements ActionListener
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "No se encontro archivo");
 				}
-			}
+			} 
 				
 		}
 	}
